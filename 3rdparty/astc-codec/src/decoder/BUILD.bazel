@@ -12,15 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+
 licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
 
 cc_library(
     name = "footprint",
     srcs = ["footprint.cc"],
     hdrs = ["footprint.h"],
     deps = [
-        "//:api",
-        "//src/base",
+        "//bimg/3rdparty/astc-codec:api",
+        "//bimg/3rdparty/astc-codec:base",
     ],
 )
 
@@ -55,7 +59,7 @@ cc_library(
     ],
     deps = [
         ":footprint",
-        "//src/base",
+        "//bimg/3rdparty/astc-codec:base",
     ],
 )
 
@@ -63,11 +67,10 @@ cc_library(
     name = "codec",
     srcs = ["codec.cc"],
     hdrs = ["codec.h"],
-    visibility = ["//:__pkg__"],
     deps = [
         ":astc_utils",
         ":footprint",
-        "//src/base",
+        "//bimg/3rdparty/astc-codec:base",
     ],
 )
 
@@ -76,7 +79,7 @@ cc_binary(
     srcs = ["tools/astc_inspector_cli.cc"],
     deps = [
         ":astc_utils",
-        "//src/base",
+        "//bimg/3rdparty/astc-codec:base",
     ],
 )
 
@@ -90,7 +93,7 @@ cc_library(
     name = "test",
     testonly = 1,
     hdrs = ["test/image_utils.h"],
-    deps = ["@gtest//:gtest"],
+    deps = ["@gtest"],
 )
 
 cc_test(
@@ -99,8 +102,8 @@ cc_test(
     srcs = ["test/physical_astc_block_test.cc"],
     deps = [
         ":astc_utils",
+        "//bimg/3rdparty/astc-codec:base",
         "@gtest//:gtest_main",
-        "//src/base",
     ],
 )
 
@@ -120,8 +123,8 @@ cc_test(
     srcs = ["test/integer_sequence_codec_test.cc"],
     deps = [
         ":astc_utils",
+        "//bimg/3rdparty/astc-codec:base",
         "@gtest//:gtest_main",
-        "//src/base",
     ],
 )
 
@@ -204,8 +207,8 @@ cc_test(
     deps = [
         ":codec",
         ":test",
+        "//bimg/3rdparty/astc-codec:api",
         "@gtest//:gtest_main",
-        "//:api",
     ],
 )
 
@@ -234,13 +237,13 @@ cc_test(
         ],
         # GCC-only flags.
         "//conditions:default": [
-            "-finstrument-functions"
+            "-finstrument-functions",
         ],
     }),
+    linkstatic = 1,
     deps = [
         ":codec",
-        "@honggfuzz//:honggfuzz",
-        "@benchmark//:benchmark",
+        "@benchmark",
+        "@honggfuzz",
     ],
-    linkstatic = 1,
 )
