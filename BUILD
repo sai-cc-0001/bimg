@@ -42,7 +42,6 @@ cc_library(
         "3rdparty/nvtt",
         "include",
     ],
-    linkstatic = True,
     deps = [
         "//bimg/3rdparty/astc-codec:astc_codec",
         "//bx",
