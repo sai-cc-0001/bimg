@@ -29,7 +29,7 @@ srcs = [
 ]
 
 cc_library(
-    name = "bimg",
+    name = "bimg-linux",
     srcs = glob(srcs),
     hdrs = glob([
         "**/*.h",
@@ -44,6 +44,26 @@ cc_library(
     ],
     deps = [
         "//bimg/3rdparty/astc-codec:astc_codec",
-        "//bx",
+        "//bx:bx-linux",
+    ],
+)
+
+cc_library(
+    name = "bimg-macos",
+    srcs = glob(srcs),
+    hdrs = glob([
+        "**/*.h",
+        "src/bimg_p.*",
+        "3rdparty/lodepng/*.cpp",
+    ]),
+    includes = [
+        "3rdparty",
+        "3rdparty/iqa/include",
+        "3rdparty/nvtt",
+        "include",
+    ],
+    deps = [
+        "//bimg/3rdparty/astc-codec:astc_codec",
+        "//bx:bx-macos",
     ],
 )
