@@ -24,9 +24,26 @@ srcs = [
     "3rdparty/astc/*.cpp",
     "3rdparty/astc/*.h",
     "3rdparty/tinyexr/*.h",
+]
+
+srcs_iqa = [
     "3rdparty/iqa/include/*.h",
     "3rdparty/iqa/source/*.c",
 ]
+
+# Break out iqa to applyu
+cc_library(
+    name = "iqa",
+    srcs = glob(srcs_iqa),
+    hdrs = glob([
+        "**/*.h",
+    ]),
+    copts = [
+    ],
+    includes = [
+        "3rdparty/iqa/include",
+    ],
+)
 
 cc_library(
     name = "bimg-linux",
@@ -36,6 +53,9 @@ cc_library(
         "src/bimg_p.*",
         "3rdparty/lodepng/*.cpp",
     ]),
+    copts = [
+        "-Wno-class-memaccess",
+    ],
     includes = [
         "3rdparty",
         "3rdparty/iqa/include",
@@ -43,6 +63,7 @@ cc_library(
         "include",
     ],
     deps = [
+        "iqa",
         "//bimg/3rdparty/astc-codec:astc_codec",
         "//bx:bx-linux",
     ],
